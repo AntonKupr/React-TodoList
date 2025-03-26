@@ -15,6 +15,10 @@ an argument.
 VcsRoots, BuildTypes, Templates, and subprojects can be
 registered inside the project using the vcsRoot(), buildType(),
 template(), and subProject() methods respectively.
+
+To debug settings scripts in IntelliJ IDEA, open the 'TeamCity'
+tool window (View -> Tool Windows -> TeamCity), then click the
+'Debug' button in the toolbar and select the desired settings file.
 */
 
 version = "2019.2"
@@ -22,26 +26,18 @@ version = "2019.2"
 project {
     description = "React TodoList Application"
 
-    // Define VCS Root
-    val vcsRoot = GitVcsRoot {
-        id("ReactTodoListVcs")
-        name = "React TodoList VCS"
-        url = "https://github.com/yourusername/React-TodoList.git" // Replace with actual repository URL
-        branch = "refs/heads/master"
-        branchSpec = "+:refs/heads/*"
-    }
-    vcsRoot(vcsRoot)
+    // Define Main VCS Root
+    val mainVcsRoot = DslContext.settingsRoot
 
     // Build Configuration
     buildType {
-        id("ReactTodoListBuild")
+        id("Build")
         name = "Build"
 
         vcs {
-            root(vcsRoot)
+            root(mainVcsRoot)
         }
 
-        // Build Steps
         steps {
             // Install dependencies
             script {
@@ -57,35 +53,32 @@ project {
 
             // Build the application
             script {
-                name = "Build"
+                name = "Build Application"
                 scriptContent = "npm run build"
             }
         }
 
-        // Triggers
         triggers {
             vcs {
                 branchFilter = "+:*"
             }
         }
 
-        // Features
         features {
             perfmon {
             }
         }
     }
 
-    // Deployment Configuration
+    // Deploy Configuration
     buildType {
-        id("ReactTodoListDeploy")
+        id("Deploy")
         name = "Deploy"
 
         vcs {
-            root(vcsRoot)
+            root(mainVcsRoot)
         }
 
-        // Build Steps
         steps {
             // Install dependencies
             script {
@@ -95,26 +88,30 @@ project {
 
             // Build the application
             script {
-                name = "Build"
+                name = "Build Application"
                 scriptContent = "npm run build"
             }
 
-            // Deploy the application (generic example)
+            // Deploy step (example - adjust as needed)
             script {
-                name = "Deploy"
+                name = "Deploy Application"
                 scriptContent = """
-                    echo "Deploying React TodoList application..."
-                    # Copy build files to deployment server or service
-                    # This is a placeholder - replace with actual deployment commands
-                    echo "Deployment completed successfully"
+                    echo "Deploying application..."
+                    # Add your deployment commands here
+                    # For example: scp -r build/* user@server:/path/to/deployment
+                    echo "Deployment completed"
                 """.trimIndent()
             }
         }
 
-        // Dependencies
         dependencies {
-            snapshot(RelativeId("ReactTodoListBuild")) {
+            snapshot(RelativeId("Build")) {
                 onDependencyFailure = FailureAction.FAIL_TO_START
+            }
+        }
+
+        features {
+            perfmon {
             }
         }
     }
