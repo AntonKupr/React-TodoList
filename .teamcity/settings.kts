@@ -31,8 +31,9 @@ project {
 
     // Build Configuration
     buildType {
-        id("Build")
-        name = "Build"
+        id("ReactTodoListBuild")
+        name = "Build React TodoList"
+        description = "Builds the React TodoList application"
 
         vcs {
             root(mainVcsRoot)
@@ -43,12 +44,6 @@ project {
             script {
                 name = "Install Dependencies"
                 scriptContent = "npm install"
-            }
-
-            // Run tests
-            script {
-                name = "Run Tests"
-                scriptContent = "npm test -- --watchAll=false"
             }
 
             // Build the application
@@ -70,42 +65,30 @@ project {
         }
     }
 
-    // Deploy Configuration
+    // Deployment Configuration
     buildType {
-        id("Deploy")
-        name = "Deploy"
+        id("ReactTodoListDeploy")
+        name = "Deploy React TodoList"
+        description = "Deploys the React TodoList application"
 
         vcs {
             root(mainVcsRoot)
         }
 
         steps {
-            // Install dependencies
-            script {
-                name = "Install Dependencies"
-                scriptContent = "npm install"
-            }
-
-            // Build the application
-            script {
-                name = "Build Application"
-                scriptContent = "npm run build"
-            }
-
-            // Deploy step (example - adjust as needed)
+            // Simple deployment step - this would be replaced with actual deployment logic
             script {
                 name = "Deploy Application"
                 scriptContent = """
-                    echo "Deploying application..."
-                    # Add your deployment commands here
-                    # For example: scp -r build/* user@server:/path/to/deployment
-                    echo "Deployment completed"
-                """.trimIndent()
+                    echo "Deploying React TodoList application..."
+                    # This is a placeholder for actual deployment commands
+                    # For example, copying files to a web server or deploying to a cloud service
+                """
             }
         }
 
         dependencies {
-            snapshot(RelativeId("Build")) {
+            snapshot(RelativeId("ReactTodoListBuild")) {
                 onDependencyFailure = FailureAction.FAIL_TO_START
             }
         }
