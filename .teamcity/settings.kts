@@ -18,6 +18,7 @@ project {
     buildType {
         id("Build")
         name = "Build"
+        description = "Build React TodoList application"
 
         vcs {
             root(mainVcsRoot)
@@ -36,7 +37,7 @@ project {
                 scriptContent = "npm test -- --watchAll=false"
             }
 
-            // Build the application
+            // Build application
             script {
                 name = "Build Application"
                 scriptContent = "npm run build"
@@ -53,12 +54,17 @@ project {
             perfmon {
             }
         }
+
+        requirements {
+            exists("env.NODE_JS_HOME")
+        }
     }
 
     // Deploy Configuration
     buildType {
         id("Deploy")
         name = "Deploy"
+        description = "Deploy React TodoList application"
 
         vcs {
             root(mainVcsRoot)
@@ -71,20 +77,22 @@ project {
                 scriptContent = "npm install"
             }
 
-            // Build the application
+            // Build application
             script {
                 name = "Build Application"
                 scriptContent = "npm run build"
             }
 
-            // Deploy the application (example - adjust as needed)
+            // Deploy application (example - copy to a deployment directory)
             script {
                 name = "Deploy Application"
                 scriptContent = """
                     echo "Deploying application..."
-                    # Add your deployment commands here
-                    # For example, copying to a web server or deploying to a cloud service
-                    echo "Application deployed successfully"
+                    # This is a placeholder for actual deployment commands
+                    # For example, copying to a web server directory or uploading to a cloud service
+                    mkdir -p /tmp/deploy
+                    cp -R build/* /tmp/deploy/
+                    echo "Application deployed to /tmp/deploy"
                 """.trimIndent()
             }
         }
@@ -95,9 +103,8 @@ project {
             }
         }
 
-        features {
-            perfmon {
-            }
+        requirements {
+            exists("env.NODE_JS_HOME")
         }
     }
 }
