@@ -34,7 +34,7 @@ project {
             // Run tests
             script {
                 name = "Run Tests"
-                scriptContent = "npm test -- --watchAll=false"
+                scriptContent = "npm test"
             }
 
             // Build application
